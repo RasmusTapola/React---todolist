@@ -14,6 +14,7 @@ function App() {
         event.preventDefault();
         setTodos([...todos, todo]);
     }
+    
 
     return (
         <div className="App">
@@ -26,7 +27,7 @@ function App() {
             </form>
             
             <table>
-                <tbody>
+            <tbody>
                     
                     <th>Description:</th>
                     <th>Date:</th>
@@ -35,8 +36,9 @@ function App() {
                     {
                     todos.map((todo, index) =>
                         <tr key={index}>                           
-                            <td>{todo.desc}</td>                           
-                            <td>{todo.date}</td>    
+                            <td>{todo.desc}</td>
+                            <td>{todo.date}</td>
+                            <td><input type="button" value="Delete" onClick={()=>setTodos(todos.filter((todo, i)=> i !== index))}></input></td>
                     </tr>
                         )
                     }
