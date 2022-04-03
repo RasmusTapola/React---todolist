@@ -1,49 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './App.css';
+import Todolist from './Components/Todolist';
+
 
 function App() {
-    const [todo, setTodo] = useState({ desc: '', date: '' });
-    const [todos, setTodos] = useState([]);
-   
-
-    const inputChanged = (event) => {
-        setTodo({...todo, [event.target.name]:event.target.value });
-    }
-
-    const addTodoList = (event) => {
-        event.preventDefault();
-        setTodos([...todos, todo]);
-    }
     
-
     return (
         <div className="App">
-            <h1>Todo List</h1>
-            <form onSubmit={addTodoList}>
-
-                Description: <input type="text" name="desc" value={todo.desc} onChange={inputChanged}></input>
-                Date: <input type="date" name="date" value={todo.date} onChange={inputChanged}></input>
-                    <input type="submit"></input>
-            </form>
+            <Todolist/>
             
-            <table>
-            <tbody>
-                    
-                    <th>Description:</th>
-                    <th>Date:</th>
-                    
-                    
-                    {
-                    todos.map((todo, index) =>
-                        <tr key={index}>                           
-                            <td>{todo.desc}</td>
-                            <td>{todo.date}</td>
-                            <td><input type="button" value="Delete" onClick={()=>setTodos(todos.filter((todo, i)=> i !== index))}></input></td>
-                    </tr>
-                        )
-                    }
-                </tbody>
-          </table>
+            
     </div>
   );
 }
