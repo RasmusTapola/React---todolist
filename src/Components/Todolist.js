@@ -1,12 +1,27 @@
 import { AgGridReact } from 'ag-grid-react';
 import React , {useState, useRef} from 'react';
-import Todotable from './Todotable';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Stack from '@mui/material/Stack';
+import MomentUtils from '@date-io/moment';
+import {MuiPickersUtilsProvider, DatePicker } from '@material-ui/pickers';
+import TabApp from './TabApp';
 
 export default function Todolist (){
     const [todo, setTodo] = useState({ desc: '', date: '' , priority: ''});
     const [todos, setTodos] = useState([]);
+    const [SelectedDate, setSelectedDate] = useState (new Date());
+    const [value, setValue] = useState ('one');
     const gridRef = useRef();
-   
+
+    const handleChange = (event, value) =>{
+        setValue(value);
+    }
+
+    const dateChanged = (date) => {
+        setSelectedDate(date)
+        setTodo({...todo, date:(date, SelectedDate)})
+    }
 
     const inputChanged = (event) => {
         setTodo({...todo, [event.target.name]:event.target.value });
@@ -40,22 +55,46 @@ export default function Todolist (){
     return(
         <div>
             <h1>Todo list</h1>
-            <form onSubmit={addTodoList}>
+            <TabApp
+                value={value}
+                handleChange={handleChange}
+            />
+            {value === 'one' && <h2>Welcome to Todo list app!</h2>}
+            {value === 'two' && <div>
 
-                Description: <input type="text" name="desc" value={todo.desc} onChange={inputChanged}></input>
-                Date: <input type="date" name="date" value={todo.date} onChange={inputChanged}></input>
-                Priority: <input type="text" name="priority" value={todo.priority} onChange={inputChanged}></input>
-                <input type="button" value="Delete" onClick={deleteTodo}></input>
-                <input type="submit" value="Add"></input>
+            <form onSubmit={addTodoList}>
+                <Stack direction="row" spacing={2} justifyContent="center" alignItems="center">
+                <TextField label="Description" variant="standard" name="desc" value={todo.desc} onChange={inputChanged}>
+                </TextField>
+                <MuiPickersUtilsProvider utils={MomentUtils}>
+                <DatePicker
+                variant='inline'
+                format='dd/mm/yyyy'
+                margin='normal'
+                id='date-picker'
+                name='date'
+                label='Date Picker'
+                value={SelectedDate}
+                onChange={dateChanged}></DatePicker>
+                </MuiPickersUtilsProvider>
+                <TextField label="Priority" variant="standard" name="priority" value={todo.priority} onChange={inputChanged}>
+                </TextField>    
+                <Button onclick={deleteTodo} variant="contained" >Delete</Button>
+                <Button type="submit" onClick={addTodoList} variant="contained" >Add</Button>
+                </Stack>
             </form>
-            
             <div
+
+            
+
                 className="ag-theme-material"
                 style={{
                     height: '1000px',
                     width: '35%',
                     margin: 'auto'}}
                     >
+
+
             <AgGridReact
                 ref={gridRef}
                 onGridReady={params => gridRef.current = params.api}
@@ -66,6 +105,7 @@ export default function Todolist (){
                > 
             </AgGridReact>
             </div>
+            </div>}
             
             
         </div>
